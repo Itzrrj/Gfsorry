@@ -245,8 +245,13 @@
     font-weight: 700; color: #c2185b; font-size: 1.1rem; letter-spacing: .1em; opacity: 0; transform: scale(1.6) rotate(-14deg); transition: all .35s cubic-bezier(.3,1.5,.5,1); }
   .coupon .stamp em { font-style: normal; border: 3px solid #c2185b; border-radius: 8px; padding: 4px 10px; }
   .coupon.used .stamp { opacity: 1; transform: scale(1) rotate(-14deg); }
-  .final-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 8px; }
-  .final-actions .btn { text-decoration: none; }
+  .final-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px; }
+  .final-actions .btn { text-decoration: none; margin-top: 0; min-width: 150px; }
+  .btn.snap { background: #fffc00; color: #111; box-shadow: 0 10px 30px rgba(255, 252, 0, .35), inset 0 1px 0 rgba(255,255,255,.6); }
+  .toast { position: fixed; left: 50%; bottom: calc(60px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); z-index: 70;
+    background: var(--cream); color: var(--ink); font-weight: 700; padding: 12px 20px; border-radius: 99px; box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    opacity: 0; pointer-events: none; transition: all .35s ease; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .ps { margin-top: 26px; font-size: .9rem; opacity: .7; line-height: 1.6; }
 
   .confetti { position: fixed; top: -40px; z-index: 50; pointer-events: none; font-size: var(--s); animation: fall var(--d) linear forwards; }
@@ -423,9 +428,10 @@
         <p class="sub" style="font-size:.95rem">Tap one to redeem it. Screenshot it and send it to me — no expiry date, ever.</p>
         <div class="coupons" id="coupons"></div>
 
-        <h3 class="section-title script">Tell me 💌</h3>
+        <h3 class="section-title script">Send me a reply 💌</h3>
         <div class="final-actions">
-          <a class="btn" id="replyBtn" target="_blank" rel="noopener">Send a reply 💬</a>
+          <a class="btn" id="replyBtn" target="_blank" rel="noopener">WhatsApp 💬</a>
+          <a class="btn snap" id="snapBtn" target="_blank" rel="noopener">👻 Snapchat</a>
           <button class="btn ghost" id="replay">Watch again ↺</button>
         </div>
         <p class="ps">P.S. I'm smiling like an idiot right now. 😊</p>
@@ -442,6 +448,7 @@
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
   <div class="dots" id="dots"></div>
 
 <script>
@@ -521,6 +528,7 @@
   ];
 
   const replyText = `I forgive you 💗 (I saw the website 🥹)`;
+  const SNAPCHAT_USERNAME = "Shanvi_rhshhs";
 
   /* ===================== helpers ===================== */
   const $ = (id) => document.getElementById(id);
@@ -901,6 +909,16 @@
     $("coupons").appendChild(c);
   });
   $("replyBtn").href = "https://wa.me/?text=" + encodeURIComponent(replyText);
+  // Snapchat can't pre-fill a message, so copy the reply first and open the profile to paste it
+  $("snapBtn").href = "https://www.snapchat.com/add/" + encodeURIComponent(SNAPCHAT_USERNAME);
+  $("snapBtn").addEventListener("click", () => {
+    try { navigator.clipboard.writeText(replyText); } catch (e) {}
+    showToast("Copied! Paste it in the chat 💛");
+  });
+  function showToast(msg) {
+    const t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(showToast.timer); showToast.timer = setTimeout(() => t.classList.remove("show"), 3500);
+  }
   $("replay").addEventListener("click", () => location.reload());
 
   /* ===================== effects ===================== */
