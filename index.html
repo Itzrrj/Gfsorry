@@ -430,7 +430,6 @@
 
         <h3 class="section-title script">Send me a reply 💌</h3>
         <div class="final-actions">
-          <a class="btn" id="replyBtn" target="_blank" rel="noopener">WhatsApp 💬</a>
           <a class="btn snap" id="snapBtn" target="_blank" rel="noopener">👻 Snapchat</a>
           <button class="btn ghost" id="replay">Watch again ↺</button>
         </div>
@@ -908,7 +907,6 @@
     });
     $("coupons").appendChild(c);
   });
-  $("replyBtn").href = "https://wa.me/?text=" + encodeURIComponent(replyText);
   // Snapchat can't pre-fill a message, so copy the reply first and open the profile to paste it
   $("snapBtn").href = "https://www.snapchat.com/add/" + encodeURIComponent(SNAPCHAT_USERNAME);
   $("snapBtn").addEventListener("click", () => {
